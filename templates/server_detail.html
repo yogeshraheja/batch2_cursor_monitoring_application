@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Server detail{% endblock %}
+{% block content %}
+<h1 class="page-title">Server detail</h1>
+<p class="page-lead">
+  Placeholder metrics for <code>{{ server_id }}</code>.
+  Live collection is not wired yet.
+</p>
+
+<section class="metric-block">
+  <h2>CPU</h2>
+  <p class="metric-value">— %</p>
+  <p class="placeholder-line">Usage will refresh every 5–10 seconds.</p>
+</section>
+
+<section class="metric-block">
+  <h2>Memory</h2>
+  <p class="metric-value">— / — (— %)</p>
+  <p class="placeholder-line">Used / total / percent.</p>
+</section>
+
+<section class="metric-block">
+  <h2>Network</h2>
+  <p class="metric-value">RX — · TX —</p>
+  <p class="placeholder-line">Simple RX/TX summary.</p>
+</section>
+
+<section class="metric-block">
+  <h2>Listening ports</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Port</th>
+          <th>Protocol</th>
+          <th>Process</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" style="color: var(--text-muted);">
+            Listening ports only (no established connections). Empty until collection is added.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

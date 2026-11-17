@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<h1 class="page-title">Overview</h1>
+<p class="page-lead">
+  Configured servers will appear here with live status, CPU, and memory.
+  Skeleton only — no live data yet.
+</p>
+
+<div class="skeleton-grid" aria-hidden="true">
+  <article class="skeleton-card">
+    <h3>localhost</h3>
+    <p><span class="status-pill">status —</span></p>
+    <p class="placeholder-line">CPU — · Memory —</p>
+    <p class="placeholder-line">Network —</p>
+  </article>
+  <article class="skeleton-card">
+    <h3>example-host</h3>
+    <p><span class="status-pill">status —</span></p>
+    <p class="placeholder-line">CPU — · Memory —</p>
+    <p class="placeholder-line">Network —</p>
+  </article>
+</div>
+
+<div class="table-wrap" style="margin-top: 1.5rem;">
+  <table class="data">
+    <thead>
+      <tr>
+        <th>Name / host</th>
+        <th>Status</th>
+        <th>CPU</th>
+        <th>Memory</th>
+        <th>Network</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="5" style="color: var(--text-muted);">
+          No servers configured yet. Live rows land in a later phase.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

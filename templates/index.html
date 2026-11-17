@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1 class="page-title">Demo Linux Server Monitoring</h1>
+  <p class="page-lead">
+    Read-only browser view of live CPU, memory, network, and listening ports —
+    so L1–L3 teams can triage without SSHing into every host.
+  </p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="{{ url_for('overview') }}">Open overview</a>
+    <a class="btn btn-ghost" href="{{ url_for('add_server') }}">Add a server</a>
+  </div>
+</section>
+{% endblock %}

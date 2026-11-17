@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Add server{% endblock %}
+{% block content %}
+<h1 class="page-title">Add server</h1>
+<p class="page-lead">
+  Form fields only — submit / inventory logic comes later.
+  Local demo only; do not enter production credentials.
+</p>
+
+<form class="form-stack" action="#" method="get" onsubmit="return false;">
+  <label>
+    Display name (optional)
+    <input type="text" name="name" placeholder="web-01" autocomplete="off">
+  </label>
+
+  <label>
+    IP address or hostname
+    <input type="text" name="host" placeholder="192.168.1.10" autocomplete="off" required>
+  </label>
+
+  <label>
+    SSH port
+    <input type="number" name="port" value="22" min="1" max="65535">
+  </label>
+
+  <label>
+    SSH username
+    <input type="text" name="username" placeholder="monitor" autocomplete="username">
+  </label>
+
+  <p class="form-hint">
+    Credential fields are omitted here until auth + HTTPS notes land.
+    Password / private key input will be added with submit handling (local-only OK for demo).
+  </p>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" disabled title="Submit not wired yet">
+      Save server
+    </button>
+    <a class="btn btn-ghost" href="{{ url_for('overview') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}
