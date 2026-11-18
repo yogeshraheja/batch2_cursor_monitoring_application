@@ -1,0 +1,46 @@
+# CI for the demo monitoring app.
+# Unit tests use fixture password hashes only — no repository secrets required.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        # Do not echo env secrets. Tests set ADMIN_PASSWORD_HASH via fixtures.
+        run: pytest -q
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install ruff
+        run: pip install ruff==0.8.4
+
+      - name: Lint (minimal)
+        run: ruff check app.py auth.py config.py servers.py collectors tests --select E9,F63,F7,F82

@@ -1,43 +1,104 @@
 {% extends "base.html" %}
-{% block title %}Add server{% endblock %}
+{% block title %}{% if mode == 'edit' %}Edit server{% else %}Add server{% endif %}{% endblock %}
 {% block content %}
-<h1 class="page-title">Add server</h1>
+<h1 class="page-title">{% if mode == 'edit' %}Edit server{% else %}Add server{% endif %}</h1>
 <p class="page-lead">
-  Form fields only — submit / inventory logic comes later.
-  Local demo only; do not enter production credentials.
+  Demo credentials only — lab hosts. Inventory is stored in memory and lost on restart.
+  {% if mode == 'edit' %}
+  Leave password / private key blank to keep the existing secret.
+  {% endif %}
 </p>
 
-<form class="form-stack" action="#" method="get" onsubmit="return false;">
+<form class="form-stack" method="post"
+      action="{% if mode == 'edit' %}{{ url_for('edit_server', server_id=server.id) }}{% else %}{{ url_for('add_server') }}{% endif %}"
+      id="server-form">
+  {{ form.hidden_tag() }}
+
   <label>
     Display name (optional)
-    <input type="text" name="name" placeholder="web-01" autocomplete="off">
+    {{ form.name(placeholder="web-01", autocomplete="off") }}
   </label>
 
   <label>
-    IP address or hostname
-    <input type="text" name="host" placeholder="192.168.1.10" autocomplete="off" required>
+    Auth type
+    {{ form.auth_type(id="auth_type") }}
   </label>
 
-  <label>
-    SSH port
-    <input type="number" name="port" value="22" min="1" max="65535">
-  </label>
+  <div id="ssh-fields" class="form-subgroup">
+    <label>
+      IP address or hostname
+      {{ form.host(placeholder="192.168.1.10", autocomplete="off", id="host") }}
+    </label>
 
-  <label>
-    SSH username
-    <input type="text" name="username" placeholder="monitor" autocomplete="username">
-  </label>
+    <label>
+      SSH port
+      {{ form.port(id="port") }}
+    </label>
+
+    <label>
+      SSH username
+      {{ form.ssh_user(placeholder="monitor", autocomplete="username", id="ssh_user") }}
+    </label>
+
+    <div id="password-fields">
+      <label>
+        SSH password
+        {{ form.password(autocomplete="new-password", id="password") }}
+      </label>
+      {% if mode == 'edit' and server and server.has_password %}
+      <p class="form-hint">Password is set — leave blank to keep it.</p>
+      {% endif %}
+    </div>
+
+    <div id="key-fields" hidden>
+      <label>
+        Private key (paste PEM content)
+        {{ form.private_key(rows=6, placeholder="-----BEGIN OPENSSH PRIVATE KEY-----", id="private_key") }}
+      </label>
+      <p class="form-hint">
+        Paste the key into memory for this demo (safer than reading arbitrary filesystem paths).
+        The key is never shown again after save — only “key set”.
+      </p>
+      {% if mode == 'edit' and server and server.has_key %}
+      <p class="form-hint">Key is set — leave blank to keep it.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <p class="form-hint" id="localhost-hint" hidden>
+    Localhost mode collects metrics on this machine with psutil — no SSH fields needed.
+  </p>
 
   <p class="form-hint">
-    Credential fields are omitted here until auth + HTTPS notes land.
-    Password / private key input will be added with submit handling (local-only OK for demo).
+    Use demo / lab credentials only. Do not enter production passwords or keys.
   </p>
 
   <div class="form-actions">
-    <button type="submit" class="btn btn-primary" disabled title="Submit not wired yet">
-      Save server
+    <button type="submit" class="btn btn-primary">
+      {% if mode == 'edit' %}Save changes{% else %}Save server{% endif %}
     </button>
     <a class="btn btn-ghost" href="{{ url_for('overview') }}">Cancel</a>
   </div>
 </form>
+
+<script>
+(function () {
+  const auth = document.getElementById("auth_type");
+  const sshFields = document.getElementById("ssh-fields");
+  const passwordFields = document.getElementById("password-fields");
+  const keyFields = document.getElementById("key-fields");
+  const localhostHint = document.getElementById("localhost-hint");
+
+  function sync() {
+    const v = auth.value;
+    const isLocal = v === "localhost";
+    sshFields.hidden = isLocal;
+    localhostHint.hidden = !isLocal;
+    passwordFields.hidden = v !== "password";
+    keyFields.hidden = v !== "key";
+  }
+  auth.addEventListener("change", sync);
+  sync();
+})();
+</script>
 {% endblock %}

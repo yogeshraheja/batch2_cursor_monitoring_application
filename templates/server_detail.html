@@ -1,47 +1,75 @@
 {% extends "base.html" %}
-{% block title %}Server detail{% endblock %}
+{% block title %}{{ server.display_name }}{% endblock %}
 {% block content %}
-<h1 class="page-title">Server detail</h1>
+<h1 class="page-title">{{ server.display_name }}</h1>
 <p class="page-lead">
-  Placeholder metrics for <code>{{ server_id }}</code>.
-  Live collection is not wired yet.
+  {{ server.host }}
+  {% if server.auth_type != 'localhost' %} · SSH {{ server.ssh_user }}@{{ server.host }}:{{ server.port }}{% endif %}
+  · {{ server.auth_type }}
+  · refreshes every {{ refresh_seconds }}s
+</p>
+
+<p class="detail-actions">
+  <a class="btn btn-ghost" href="{{ url_for('overview') }}">← Overview</a>
+  <a class="btn btn-ghost" href="{{ url_for('edit_server', server_id=server.id) }}">Edit</a>
+</p>
+
+{% if metrics.error %}
+<div class="banner">{{ metrics.error }}</div>
+{% endif %}
+
+<p>
+  <span class="status-pill status-{{ 'reachable' if metrics.reachable else 'unreachable' }}">
+    {{ 'reachable' if metrics.reachable else 'unreachable' }}
+  </span>
 </p>
 
 <section class="metric-block">
   <h2>CPU</h2>
-  <p class="metric-value">— %</p>
-  <p class="placeholder-line">Usage will refresh every 5–10 seconds.</p>
+  <p class="metric-value">{{ cpu_display }}</p>
 </section>
 
 <section class="metric-block">
   <h2>Memory</h2>
-  <p class="metric-value">— / — (— %)</p>
-  <p class="placeholder-line">Used / total / percent.</p>
+  <p class="metric-value">{{ memory_line }}</p>
 </section>
 
 <section class="metric-block">
   <h2>Network</h2>
-  <p class="metric-value">RX — · TX —</p>
-  <p class="placeholder-line">Simple RX/TX summary.</p>
+  <p class="metric-value">{{ metrics.network.summary }}</p>
+  <p class="placeholder-line">Cumulative interface counters (excluding loopback where possible).</p>
 </section>
 
 <section class="metric-block">
-  <h2>Listening ports</h2>
+  <h2>Listening ports only</h2>
+  <p class="placeholder-line">Listening sockets only — established connections are not listed.</p>
   <div class="table-wrap">
     <table class="data">
       <thead>
         <tr>
+          <th>Bind address</th>
           <th>Port</th>
           <th>Protocol</th>
           <th>Process</th>
         </tr>
       </thead>
       <tbody>
+        {% if not metrics.listening_ports %}
         <tr>
-          <td colspan="3" style="color: var(--text-muted);">
-            Listening ports only (no established connections). Empty until collection is added.
+          <td colspan="4" style="color: var(--text-muted);">
+            No listening ports reported (or permissions blocked process lookup).
           </td>
         </tr>
+        {% else %}
+        {% for p in metrics.listening_ports %}
+        <tr>
+          <td class="mono">{{ p.address }}</td>
+          <td class="mono">{{ p.port }}</td>
+          <td>{{ p.protocol }}</td>
+          <td>{{ p.process or "—" }}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
       </tbody>
     </table>
   </div>

@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% if auto_refresh %}
+  <meta http-equiv="refresh" content="{{ refresh_seconds }}">
+  {% endif %}
 </head>
 <body>
   <header class="site-header">
@@ -20,12 +23,8 @@
              {% if request.endpoint == 'overview' %}aria-current="page"{% endif %}>Overview</a>
         </li>
         <li>
-          <a href="{{ url_for('server_detail', server_id='demo') }}"
-             {% if request.endpoint == 'server_detail' %}aria-current="page"{% endif %}>Server detail</a>
-        </li>
-        <li>
           <a href="{{ url_for('add_server') }}"
-             {% if request.endpoint == 'add_server' %}aria-current="page"{% endif %}>Add server</a>
+             {% if request.endpoint in ('add_server', 'edit_server') %}aria-current="page"{% endif %}>Add server</a>
         </li>
         <li>
           <a href="{{ url_for('logout') }}">Logout</a>
@@ -41,11 +40,24 @@
   </header>
 
   <main class="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flash-list">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
   </main>
 
   <footer class="site-footer">
     Local demo only · binds to 0.0.0.0 · monitoring views require login · in-memory data
+    {% if auto_refresh %} · auto-refresh {{ refresh_seconds }}s{% endif %}
   </footer>
+  {% if auto_refresh %}
+  <script src="{{ url_for('static', filename='js/refresh.js') }}" defer></script>
+  {% endif %}
 </body>
 </html>

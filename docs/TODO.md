@@ -96,177 +96,177 @@ Every step includes **Security** and **Docs** checkboxes — complete those befo
 ## Phase 2 — CI/CD (GitHub Actions) & quality gates
 
 ### Step 2.1 — GitHub Actions CI workflow
-- [ ] Add `.github/workflows/ci.yml`
-- [ ] On push/PR: checkout, set up Python, install deps, run `pytest`
-- [ ] Optional lint job (ruff/flake8) — keep minimal if used
+- [x] Add `.github/workflows/ci.yml`
+- [x] On push/PR: checkout, set up Python, install deps, run `pytest`
+- [x] Optional lint job (ruff/flake8) — keep minimal if used
 - **Security**
-  - [ ] No secrets required in CI for unit tests
-  - [ ] Do not echo env secrets in workflow logs
+  - [x] No secrets required in CI for unit tests
+  - [x] Do not echo env secrets in workflow logs
 - **Docs**
-  - [ ] README badge or short “CI” section: what CI runs
+  - [x] README badge or short “CI” section: what CI runs
 
 ### Step 2.2 — Dependency & safety hygiene (demo-light)
-- [ ] Pin dependencies in `requirements.txt`
-- [ ] Add a CI step or documented command for basic audit (optional `pip-audit` — skip if too heavy)
+- [x] Pin dependencies in `requirements.txt`
+- [x] Add a CI step or documented command for basic audit (optional `pip-audit` — skip if too heavy)
 - **Security**
-  - [ ] Prefer pinned versions to avoid surprise supply-chain drift in demo
+  - [x] Prefer pinned versions to avoid surprise supply-chain drift in demo
 - **Docs**
-  - [ ] Document how to update pins when needed
+  - [x] Document how to update pins when needed
 
 ---
 
 ## Phase 3 — In-memory server inventory (CRUD UI)
 
 ### Step 3.1 — In-memory server model
-- [ ] Define server dict/dataclass: id, name, host, port, ssh_user, auth_type (password|key|localhost), credential fields
-- [ ] In-memory store: list/dict with add / get / update / delete
-- [ ] Unit tests for store CRUD
+- [x] Define server dict/dataclass: id, name, host, port, ssh_user, auth_type (password|key|localhost), credential fields
+- [x] In-memory store: list/dict with add / get / update / delete
+- [x] Unit tests for store CRUD
 - **Security**
-  - [ ] Never return raw passwords/keys in HTML listings (mask in UI)
-  - [ ] Do not log SSH passwords or private key material
+  - [x] Never return raw passwords/keys in HTML listings (mask in UI)
+  - [x] Do not log SSH passwords or private key material
 - **Docs**
-  - [ ] `docs/data-model.md` (or README): fields + “lost on restart”
+  - [x] `docs/data-model.md` (or README): fields + “lost on restart”
 
 ### Step 3.2 — Add server form (password auth)
-- [ ] Wire Add Server POST → store
-- [ ] Validate host, port, username, password present for password mode
-- [ ] Redirect to overview after add
-- [ ] Unit/integration tests for add validation
+- [x] Wire Add Server POST → store
+- [x] Validate host, port, username, password present for password mode
+- [x] Redirect to overview after add
+- [x] Unit/integration tests for add validation
 - **Security**
-  - [ ] CSRF on form
-  - [ ] Basic input validation (host length, port range 1–65535)
-  - [ ] Reject path traversal-like junk in host field
+  - [x] CSRF on form
+  - [x] Basic input validation (host length, port range 1–65535)
+  - [x] Reject path traversal-like junk in host field
 - **Docs**
-  - [ ] Short help text under form: demo credentials only
+  - [x] Short help text under form: demo credentials only
 
 ### Step 3.3 — Add server: key-based + localhost modes
-- [ ] UI toggle/option: password | private key | localhost
-- [ ] Localhost: skip SSH fields; mark `auth_type=localhost`
-- [ ] Key mode: accept key path or key content (demo-simple); validate non-empty
-- [ ] Tests for each mode’s validation rules
+- [x] UI toggle/option: password | private key | localhost
+- [x] Localhost: skip SSH fields; mark `auth_type=localhost`
+- [x] Key mode: accept key path or key content (demo-simple); validate non-empty
+- [x] Tests for each mode’s validation rules
 - **Security**
-  - [ ] If key path: only allow reading paths intended for demo; document risk of path abuse
-  - [ ] Prefer pasting key into memory for demo over reading arbitrary filesystem paths if simpler/safer
-  - [ ] Never render private key back to the browser after save (show “key set” only)
+  - [x] If key path: only allow reading paths intended for demo; document risk of path abuse
+  - [x] Prefer pasting key into memory for demo over reading arbitrary filesystem paths if simpler/safer
+  - [x] Never render private key back to the browser after save (show “key set” only)
 - **Docs**
-  - [ ] README: three server types explained in 3 bullets
+  - [x] README: three server types explained in 3 bullets
 
 ### Step 3.4 — Edit & remove servers
-- [ ] Edit form pre-filled (without revealing secrets; blank = keep existing)
-- [ ] Delete with confirm (simple confirm dialog or POST confirm)
-- [ ] Tests: update, delete, 404 for unknown id
+- [x] Edit form pre-filled (without revealing secrets; blank = keep existing)
+- [x] Delete with confirm (simple confirm dialog or POST confirm)
+- [x] Tests: update, delete, 404 for unknown id
 - **Security**
-  - [ ] Only authenticated admin can mutate inventory
-  - [ ] Use POST/DELETE for mutations (no state-changing GET)
+  - [x] Only authenticated admin can mutate inventory
+  - [x] Use POST/DELETE for mutations (no state-changing GET)
 - **Docs**
-  - [ ] Note: edits are in-memory only
+  - [x] Note: edits are in-memory only
 
 ---
 
 ## Phase 4 — Localhost metrics (direct collection)
 
 ### Step 4.1 — Local collector module
-- [ ] Implement `collect_local()` using `psutil` (or `/proc`): CPU %, memory used/total/%, simple network counters
-- [ ] Unit tests with mocks for psutil where needed
+- [x] Implement `collect_local()` using `psutil` (or `/proc`): CPU %, memory used/total/%, simple network counters
+- [x] Unit tests with mocks for psutil where needed
 - **Security**
-  - [ ] Read-only APIs only; no shell=`True` with user input
-  - [ ] Handle permission errors without crashing
+  - [x] Read-only APIs only; no shell=`True` with user input
+  - [x] Handle permission errors without crashing
 - **Docs**
-  - [ ] Comment or docs: which metrics are collected locally
+  - [x] Comment or docs: which metrics are collected locally
 
 ### Step 4.2 — Listening ports (local)
-- [ ] List listening ports only (filter established)
-- [ ] Show bind address + port + optional process name if cheap
-- [ ] Tests: filter logic for listening vs non-listening
+- [x] List listening ports only (filter established)
+- [x] Show bind address + port + optional process name if cheap
+- [x] Tests: filter logic for listening vs non-listening
 - **Security**
-  - [ ] Do not expose command execution; use psutil/net_connections carefully
-  - [ ] Fail soft if permissions block process names
+  - [x] Do not expose command execution; use psutil/net_connections carefully
+  - [x] Fail soft if permissions block process names
 - **Docs**
-  - [ ] UI label: “Listening ports only”
+  - [x] UI label: “Listening ports only”
 
 ### Step 4.3 — Wire localhost into Overview + Detail
-- [ ] Overview row for localhost server shows live CPU/memory (+ status)
-- [ ] Detail page renders full local metrics + listening ports
-- [ ] Auto-refresh via meta refresh or small JS `fetch`/reload (5–10s)
+- [x] Overview row for localhost server shows live CPU/memory (+ status)
+- [x] Detail page renders full local metrics + listening ports
+- [x] Auto-refresh via meta refresh or small JS `fetch`/reload (5–10s)
 - **Security**
-  - [ ] Metrics JSON/HTML endpoints still require login
-  - [ ] No arbitrary query params that change collection commands
+  - [x] Metrics JSON/HTML endpoints still require login
+  - [x] No arbitrary query params that change collection commands
 - **Docs**
-  - [ ] README: add localhost server and open detail
+  - [x] README: add localhost server and open detail
 
 ---
 
 ## Phase 5 — Remote metrics via SSH
 
 ### Step 5.1 — SSH client wrapper
-- [ ] Connect with Paramiko (password or key) with short timeout
-- [ ] Run fixed, allowlisted read-only commands only (e.g. read `/proc/stat`, `/proc/meminfo`, `ss -lntu`)
-- [ ] Parse output into same metric shape as local collector
-- [ ] Unit tests with mocked SSH client
+- [x] Connect with Paramiko (password or key) with short timeout
+- [x] Run fixed, allowlisted read-only commands only (e.g. read `/proc/stat`, `/proc/meminfo`, `ss -lntu`)
+- [x] Parse output into same metric shape as local collector
+- [x] Unit tests with mocked SSH client
 - **Security**
-  - [ ] **Allowlist commands** — never interpolate user input into shell strings
-  - [ ] Disable unknown host-key policy that silently trusts everything *or* document demo `AutoAddPolicy` risk clearly
-  - [ ] Timeouts + connection error handling; no hang forever
-  - [ ] Close SSH sessions in `finally`
+  - [x] **Allowlist commands** — never interpolate user input into shell strings
+  - [x] Disable unknown host-key policy that silently trusts everything *or* document demo `AutoAddPolicy` risk clearly
+  - [x] Timeouts + connection error handling; no hang forever
+  - [x] Close SSH sessions in `finally`
 - **Docs**
-  - [ ] `docs/ssh-collection.md`: commands used + security notes
+  - [x] `docs/ssh-collection.md`: commands used + security notes
 
 ### Step 5.2 — Remote Overview + Detail integration
-- [ ] Overview: status reachable/unreachable, CPU %, memory %, short network summary
-- [ ] Detail: CPU, memory, network, listening ports from SSH parse
-- [ ] Show last error message when unreachable
-- [ ] Manual smoke test checklist (local SSH to a lab host if available)
+- [x] Overview: status reachable/unreachable, CPU %, memory %, short network summary
+- [x] Detail: CPU, memory, network, listening ports from SSH parse
+- [x] Show last error message when unreachable
+- [x] Manual smoke test checklist (local SSH to a lab host if available)
 - **Security**
-  - [ ] Mask credentials in any error messages
-  - [ ] Rate/limit concurrency simply (one collect per request is fine for demo)
+  - [x] Mask credentials in any error messages
+  - [x] Rate/limit concurrency simply (one collect per request is fine for demo)
 - **Docs**
-  - [ ] README: how to add a remote host for demo
+  - [x] README: how to add a remote host for demo
 
 ### Step 5.3 — Auto-refresh polish
-- [ ] Shared refresh interval (5–10s) on overview and detail
-- [ ] Avoid full layout flash if using JS (optional nicety)
-- [ ] Ensure refresh does not re-POST forms
+- [x] Shared refresh interval (5–10s) on overview and detail
+- [x] Avoid full layout flash if using JS (optional nicety)
+- [x] Ensure refresh does not re-POST forms
 - **Security**
-  - [ ] Refresh requests use session cookie only; no tokens in query string
+  - [x] Refresh requests use session cookie only; no tokens in query string
 - **Docs**
-  - [ ] Document refresh interval in UI or README
+  - [x] Document refresh interval in UI or README
 
 ---
 
 ## Phase 6 — Hardening, docs wrap-up, demo readiness
 
 ### Step 6.1 — Final security pass (demo-appropriate)
-- [ ] Confirm bind address is localhost
-- [ ] Confirm all mutating routes require login + CSRF
-- [ ] Confirm secrets not in git / logs / HTML
-- [ ] Confirm SSH command allowlist
-- [ ] Confirm listening-ports-only filter
+- [x] Confirm bind address is localhost
+- [x] Confirm all mutating routes require login + CSRF
+- [x] Confirm secrets not in git / logs / HTML
+- [x] Confirm SSH command allowlist
+- [x] Confirm listening-ports-only filter
 - **Docs**
-  - [ ] Add `docs/security.md`: threat model for local demo (short)
+  - [x] Add `docs/security.md`: threat model for local demo (short)
 
 ### Step 6.2 — Final documentation pass
-- [ ] README: run, login, add localhost, add remote, run tests, CI
-- [ ] Ensure PRD ↔ TODO ↔ README agree on scope (no alerting/history/RBAC)
-- [ ] Mark completed TODO items as you go
+- [x] README: run, login, add localhost, add remote, run tests, CI
+- [x] Ensure PRD ↔ TODO ↔ README agree on scope (no alerting/history/RBAC)
+- [x] Mark completed TODO items as you go
 - **Security**
-  - [ ] README warns: demo only; not for production; lab credentials only
+  - [x] README warns: demo only; not for production; lab credentials only
 - **Docs**
-  - [ ] Keep instructions minimal (match PRD §9)
+  - [x] Keep instructions minimal (match PRD §9)
 
 ### Step 6.3 — Demo acceptance checklist
-- [ ] Unauthenticated users redirected
-- [ ] Admin login with hashed password works
-- [ ] Add / edit / remove server works (in memory)
-- [ ] Localhost metrics work without SSH
-- [ ] Remote SSH metrics work (if lab host available)
-- [ ] Overview + detail auto-refresh
-- [ ] Listening ports only
-- [ ] Restart clears inventory (expected)
-- [ ] `pytest` green locally and in GitHub Actions
+- [x] Unauthenticated users redirected
+- [x] Admin login with hashed password works
+- [x] Add / edit / remove server works (in memory)
+- [x] Localhost metrics work without SSH
+- [x] Remote SSH metrics work (if lab host available)
+- [x] Overview + detail auto-refresh
+- [x] Listening ports only
+- [x] Restart clears inventory (expected)
+- [x] `pytest` green locally and in GitHub Actions
 - **Security**
-  - [ ] Re-check no plaintext password in repo
+  - [x] Re-check no plaintext password in repo
 - **Docs**
-  - [ ] Tick PRD acceptance criteria against this checklist
+  - [x] Tick PRD acceptance criteria against this checklist
 
 ---
 
