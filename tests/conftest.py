@@ -25,6 +25,7 @@ def app(password_hash):
             "ADMIN_PASSWORD_HASH": password_hash,
             "WTF_CSRF_ENABLED": False,  # exercise auth; CSRF covered separately if needed
             "SESSION_COOKIE_HTTPONLY": True,
+            "SKIP_SSH_COLLECT": True,
         }
     )
     yield application

@@ -6,16 +6,6 @@
   Single admin account for this local demo. Default username: <code>admin</code>.
 </p>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flash-list">
-      {% for category, message in messages %}
-        <li class="flash flash-{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
 <form class="form-stack" method="post" action="{{ url_for('login', next=request.args.get('next')) }}">
   {{ form.hidden_tag() }}
   <label>

@@ -1,5 +1,10 @@
+# Pinned for the local demo to avoid surprise supply-chain drift.
+# To update: bump a pin below, pip install -r requirements.txt, run pytest -q,
+# then commit the new pins. Optional audit: pip install pip-audit && pip-audit -r requirements.txt
 Flask==3.0.3
 Werkzeug==3.0.3
 Flask-WTF==1.2.1
 WTForms==3.1.2
 pytest==8.3.3
+psutil==6.1.1
+paramiko==3.5.1
